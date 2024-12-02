@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
+	"go-qr-app/input"
 )
 
 var checkBMICmd = &cobra.Command{
@@ -11,11 +11,9 @@ var checkBMICmd = &cobra.Command{
 	Short: "Measuring BMI",
 	Long:  "Input height and weight and output BMI",
 	Run: func(cmd *cobra.Command, args []string) {
-		var stature int
-		fmt.Print("身長を入力してください(cm): ")
-		_, err := fmt.Scanln(&stature)
+		stature, err := stature.GetStature()
 		if err != nil {
-			fmt.Println("身長を正しく入力してください")
+			fmt.Println("エラー:", err)
 			return
 		}
 
