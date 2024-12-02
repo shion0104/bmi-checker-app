@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"go-qr-app/bmi"
 	"go-qr-app/input"
 )
 
@@ -24,9 +25,11 @@ var checkBMICmd = &cobra.Command{
 			return
 		}
 
-		heightInMeters := float64(stature) / 100.0
-
-		bmi := float64(bodyWeight) / (heightInMeters * heightInMeters)
+		bmi, err := bmi.CalculateBMI(bodyWeight, stature)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 
 		fmt.Printf("あなたのBMIは %.2f です。\n", bmi)
 	},
