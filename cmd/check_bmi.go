@@ -3,7 +3,9 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"go-qr-app/bmi"
 	"go-qr-app/input"
+	"os"
 )
 
 var checkBMICmd = &cobra.Command{
@@ -11,23 +13,15 @@ var checkBMICmd = &cobra.Command{
 	Short: "Measuring BMI",
 	Long:  "Input height and weight and output BMI",
 	Run: func(cmd *cobra.Command, args []string) {
+
 		stature, err := input.GetStature()
-		if err != nil {
-			fmt.Println("エラー:", err)
-			return
-		}
+		error_check(err)
 
-		var bodyWeight int
-		fmt.Print("体重を入力してください(kg): ")
-		_, err = fmt.Scanln(&bodyWeight)
-		if err != nil {
-			fmt.Println("体重を正しく入力してください。")
-			return
-		}
+		bodyWeight, err := input.GetWeight()
+		error_check(err)
 
-		heightInMeters := float64(stature) / 100.0
-
-		bmi := float64(bodyWeight) / (heightInMeters * heightInMeters)
+		bmi, err := bmi.CalculateBMI(bodyWeight, stature)
+		error_check(err)
 
 		fmt.Printf("あなたのBMIは %.2f です。\n", bmi)
 	},
@@ -35,4 +29,11 @@ var checkBMICmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(checkBMICmd)
+}
+
+func error_check(err error) {
+	if err != nil {
+			fmt.Println(err)
+			os.Exit(1) 
+		 }
 }
