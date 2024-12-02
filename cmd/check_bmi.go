@@ -11,7 +11,7 @@ var checkBMICmd = &cobra.Command{
 	Short: "Measuring BMI",
 	Long:  "Input height and weight and output BMI",
 	Run: func(cmd *cobra.Command, args []string) {
-		stature, err := stature.GetStature()
+		stature, err := input.GetStature()
 		if err != nil {
 			fmt.Println("エラー:", err)
 			return

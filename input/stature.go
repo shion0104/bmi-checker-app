@@ -1,4 +1,4 @@
-package stature
+package input
 
 import (
 	"fmt"
