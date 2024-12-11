@@ -1,37 +1,46 @@
-project_name: your_project_name
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
 
 builds:
-  - id: default
-    main: ./cmd/your_main_file.go
+  - env:
+      - CGO_ENABLED=0
     goos:
       - linux
-      - darwin
       - windows
-    goarch:
-      - amd64
-      - arm64
-    ldflags:
-      - -s -w
+      - darwin
 
 archives:
   - format: tar.gz
-    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
-    files:
-      - README.md
-      - LICENSE
-      - docs/
+    # this name template makes the OS and Arch compatible with the results of `uname`.
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    # use zip for windows archives
+    format_overrides:
+      - goos: windows
+        format: zip
 
-brews:
-  - name: your_project_name
-    homepage: https://your_project_homepage.com
-    description: "Your project description"
-    github:
-      owner: your_github_username
-      repo: your_project_name
-    install: |
-      bin.install "{{ .ProjectName }}"
-
-dockers:
-  - image_templates:
-      - "ghcr.io/your_github_username/your_project_name:latest"
-    dockerfile: ./Dockerfile
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
