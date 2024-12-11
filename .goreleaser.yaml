@@ -45,8 +45,17 @@ changelog:
       - "^docs:"
       - "^test:"
 
-brews:
-  - repository:
-      owner: shion0104 # Homebrew Taps 用のリポジトリのオーナー名
-      name: bmi-checker-app # Homebrew Taps 用のリポジトリ名
-      token: "{{ .Env.TAP_GITHUB_TOKEN }}" # `TAP_GITHUB_TOKEN` 環境変数をトークンとして使うようにする
+release:
+  github:
+    draft: false
+    prerelease: false
+    api_token: $GITHUB_TOKEN
+    files:
+      - path: dist/bmi-checker-app_Windows_i386.zip
+      - path: dist/bmi-checker-app_Windows_arm64.zip
+      - path: dist/bmi-checker-app_Darwin_arm64.tar.gz
+      - path: dist/bmi-checker-app_Darwin_x86_64.tar.gz
+      - path: dist/bmi-checker-app_Linux_i386.tar.gz
+      - path: dist/bmi-checker-app_Linux_x86_64.tar.gz
+      - path: dist/bmi-checker-app_Linux_arm64.tar.gz
+      - path: dist/bmi-checker-app_Windows_x86_64.zip
